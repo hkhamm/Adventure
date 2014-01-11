@@ -1,0 +1,5 @@
+name: adventure
+description: A text-based adventure game for the web.
+dependencies:
+  browser: any
+  collection: any
