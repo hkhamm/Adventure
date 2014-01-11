@@ -32,7 +32,7 @@ class Player extends Animate {
     var sb = new StringBuffer();
     sb.write('Inventory:<br />');
     for (var item in inventory) {
-      sb.write('&nbsp;&nbsp;' + item.text + '<br />'); 
+      sb.write('&nbsp;&nbsp;' + item.examineText + '<br />'); 
     }
     return sb.toString();
   }

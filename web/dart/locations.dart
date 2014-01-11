@@ -31,28 +31,16 @@ class Location {
     var secondWord;
     if (words.length > 1) {
       secondWord = words[1];  
-    }
-    
+    }    
 
     if (firstWord == 'examine' ||
         firstWord == 'read') {
       player.currentAction = player.examine;
       return player.act(this, words);
-//      if (secondWord == 'sign' ||
-//          secondWord == 'small') {
-//        return sign.text;
-//      } else {
-//        return 'There is no $secondWord to $firstWord.';
-//      }
     } else if (firstWord == 'take' ||
                firstWord == 'get') {
       player.currentAction = player.take;
       return player.act(this, words);
-//      if (secondWord == 'sign') {
-//        return 'The sign is too well secured to the stone to take.';
-//      } else {
-//        return 'There is no $secondWord to $firstWord.';
-//      }
     } else if (firstWord == 'hit' ||
                firstWord == 'attack') {
 
@@ -72,10 +60,6 @@ class Location {
         game.currentLocation = exits[secondWord].location;
         return exits[secondWord].location.text;
       }
-//      if (secondWord == 'cave' ||
-//          secondWord == 'dungeon') {
-//        game.location = game.location1;
-//      }
     } else if (exits.containsKey(firstWord)) { 
       game.currentLocation = exits[firstWord].location;
       return exits[firstWord].location.text;
@@ -95,22 +79,25 @@ class Location0 extends Location {
 
   Location0(Game game) : super(game) {
     title = 'The entrance';
-    text = '''You are standing at the base of a large hill. 
-           To the west is the entrance to a cave. 
-           Several sharp rocks litter the ground around the entrance. 
-           There is a small sign imbedded in the rock.''';
+    text = '''You are standing at the base of a large rocky hill. 
+           To the west is the entrance to a cave. ''';
 
     // inanimates
     sign = new Inanimate(
-        'WARNING! This is a dangeous cave. Enter at your own risk!');
+        'WARNING! This is a dangeous cave. Enter at your own risk!',
+        'There is a small sign embedded in the rock near the cave entrance. ');
     inanimates.putIfAbsent('sign', () => sign);
 
     cave = new Inanimate('A dark, mysterious cave entrance.');
     inanimates.putIfAbsent('cave', () => cave);
     
-    rock = new Takeable('A sharp rock.');
+    rock = new Takeable('A sharp rock.', 
+                        '''A particularly sharp rock lies on the ground 
+                        near the entrance. ''');
     inanimates.putIfAbsent('rock', () => rock);
     inanimates.putIfAbsent('sharp rock', () => rock);
+    
+    text += rock.locationText + sign.locationText;
   }
 
   void setupExits() {

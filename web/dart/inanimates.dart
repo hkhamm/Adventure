@@ -3,16 +3,16 @@ part of game;
 
 class Inanimate {
 
-  String text;
+  String examineText;
+  String locationText;
   List<String> titles;
 
-  Inanimate(this.text);
-
+  Inanimate(this.examineText, [this.locationText]);
 }
 
 
 class Takeable extends Inanimate {
   
-  Takeable(String text) : super(text);
-  
+  Takeable(String examineText, [String locationDescription]) : 
+    super(examineText, locationDescription); 
 }

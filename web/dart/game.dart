@@ -1,11 +1,10 @@
 library game;
 
 import 'dart:html';
+import 'dart:collection' show SplayTreeMap;
 import 'dart:convert' show JSON;
 import 'dart:async' show Future;
 import 'package:collection/algorithms.dart';
-import 'dart:collection';
-
 
 part 'actions.dart';
 part 'animates.dart';

@@ -37,7 +37,8 @@ class Examine extends Action {
     var secondWord = words[1];
 
     if (inanimates.containsKey(secondWord)) {
-      return 'You $firstWord the $secondWord:<br />' + inanimates[secondWord].text;
+      return 'You $firstWord the $secondWord:<br />' + 
+             inanimates[secondWord].examineText;
     } else {
       return 'There is no $secondWord to $firstWord.';
     }
