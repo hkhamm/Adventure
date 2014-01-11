@@ -6,12 +6,13 @@ import 'dart:async' show Future;
 import 'package:collection/algorithms.dart';
 import 'dart:collection';
 
-part 'view.dart';
-part 'locations.dart';
+
 part 'actions.dart';
 part 'animates.dart';
-part 'inanimates.dart';
 part 'exits.dart';
+part 'inanimates.dart';
+part 'locations.dart';
+part 'view.dart';
 
 // TODO save/load to/from a json file
 // TODO multi-word inanimates: add entries to each inanimate/exit map that point
