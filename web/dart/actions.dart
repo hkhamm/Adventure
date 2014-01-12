@@ -37,7 +37,7 @@ class Examine extends Action {
     var secondWord = words[1];
 
     if (inanimates.containsKey(secondWord)) {
-      return 'You $firstWord the $secondWord:<br />' + 
+      return 'You $firstWord the $secondWord:<br />' +
              inanimates[secondWord].examineText;
     } else {
       return 'There is no $secondWord to $firstWord.';
@@ -55,9 +55,9 @@ class Take extends Action {
 
     if (inanimates.containsKey(secondWord)) {
       if (inanimates[secondWord] is Takeable) {
-        player.inventory.add(inanimates.remove(secondWord));      
-        // TODO Modify description of location to reflect that the inanimate is gone
-        // TODO If something has already been taken, tell the player
+        var obj = inanimates.remove(secondWord);
+        obj.taken = true;
+        player.inventory.add(obj);
         return 'You $firstWord the $secondWord.';
       } else {
         return 'You are unable to $firstWord the $secondWord.';

@@ -6,7 +6,7 @@ class Location {
   Game game;
   SplayTreeMap<String, Inanimate> inanimates;
   SplayTreeMap<String, Exit> exits;
-  String text;
+  String _description;
   String title;
 
   Location(this.game) {
@@ -24,6 +24,22 @@ class Location {
 
   void setupExits() {
     // pass
+  }
+
+  String text() {
+    var temp = _description;
+    var list = [];
+    for (var obj in inanimates.values) {
+      if (!list.contains(obj)) {
+        list.add(obj);
+        if (obj is !Takeable) {
+          temp += obj.locationText;
+        } else if (obj is Takeable && !obj.taken) {
+          temp += obj.locationText;
+        }
+      }
+    }
+    return temp;
   }
 
   String evaluateCommand(Player player, List<String> words) {
@@ -58,11 +74,11 @@ class Location {
                 firstWord == 'run') {
       if (exits.containsKey(secondWord)) {
         game.currentLocation = exits[secondWord].location;
-        return exits[secondWord].location.text;
+        return exits[secondWord].location.text();
       }
     } else if (exits.containsKey(firstWord)) {
       game.currentLocation = exits[firstWord].location;
-      return exits[firstWord].location.text;
+      return exits[firstWord].location.text();
     } else {
       return 'I don\'t understand "$firstWord" in that context.';
     }
@@ -79,24 +95,25 @@ class Location0 extends Location {
 
   Location0(Game game) : super(game) {
     title = 'The entrance';
-    text = '''You are standing at the base of a steep rocky slope. 
-           To the west is the entrance to a cave. ''';
+    _description =
+        '''You are standing at the base of a steep rocky slope. ''';
 
     // inanimates
     sign = new Inanimate(
         'WARNING! This is a dangeous cave. Enter at your own risk!',
-        'There is a small sign embedded in the rock. ');
+        'There is a small sign embedded near the cave. ');
     inanimates.putIfAbsent('sign', () => sign);
 
-    cave = new Inanimate('A dark, mysterious cave entrance.');
+    cave = new Inanimate('A dark, mysterious cave entrance.',
+                         'To the west is the entrance to a cave. ');
     inanimates.putIfAbsent('cave', () => cave);
 
     rock = new Takeable('A sharp rock.',
-                        '''A particularly sharp rock lies on the ground. ''');
+                        'A particularly sharp rock lies on the ground. ');
     inanimates.putIfAbsent('rock', () => rock);
-    inanimates.putIfAbsent('sharp rock', () => rock);
+    //inanimates.putIfAbsent('sharp rock', () => rock);
 
-    text += rock.locationText + sign.locationText;
+    //text += rock.locationText + sign.locationText;
   }
 
   void setupExits() {
@@ -115,7 +132,7 @@ class Location1 extends Location {
 
   Location1(Game game) : super(game) {
     title = 'A long dark tunnel';
-    text = '''You are looking down a long dark tunnel. 
+    _description = '''You are looking down a long dark tunnel. 
            Behind you, light streams in from the entrance to the cave.''';
   }
 

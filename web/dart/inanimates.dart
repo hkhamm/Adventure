@@ -12,7 +12,9 @@ class Inanimate {
 
 
 class Takeable extends Inanimate {
-  
-  Takeable(String examineText, [String locationDescription]) : 
-    super(examineText, locationDescription); 
+
+  bool taken = false;
+
+  Takeable(String examineText, [String locationText]) :
+    super(examineText, locationText);
 }

@@ -3,7 +3,6 @@ part of game;
 
 class View extends ChangeNotifier {
 
-  Game game;
   ButtonElement enterButton;
   InputElement inputField;
   DivElement descriptionBox;
@@ -17,7 +16,7 @@ class View extends ChangeNotifier {
     _currentInput = notifyPropertyChange(#currentInput, _currentInput, value);
   }
 
-  View(this.game) {
+  View() {
     enterButton = querySelector('#button');
     enterButton.onClick.listen(handleMouseEvent);
 

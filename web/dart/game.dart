@@ -14,17 +14,10 @@ part 'inanimates.dart';
 part 'locations.dart';
 part 'view.dart';
 
-// TODO save/load to/from a json file
+// TODO move all command evaluation from locations to game
+// TODO save/load to/from a json file, save/load player and locations
 // TODO multi-word inanimates: add entries to each inanimate/exit map that point
-// to the same inanimate/exit
-// TODO modify descriptions, possibly using stringbuilder to create them
-// from substrings located in the inanimates OR provide complete alternate
-// descriptions that are selected when certain actions occur
-// TODO add descriptions of inanimates to inanimates
-// TODO create complete location description by combining the base location
-// description with the 'current' description for each inanimate
-// TODO Consider replacing visitor pattern with observer pattern between view
-// and game
+// to the same inanimate/exit, example: 'sharp rock' instead of just 'rock'
 
 class Game extends Observable {
 
@@ -49,7 +42,7 @@ class Game extends Observable {
   List<String> commands;
 
   Game() {
-    view = new View(this);
+    view = new View();
     player = new Player();
 
     location0 = new Location0(this);
@@ -80,9 +73,8 @@ class Game extends Observable {
 //        view.text = 'Sorry, but for some reason the text didn\'t load.';
 //      });
 
-    // TODO get starting location from json save file.
     currentLocation = location0;
-    view.text = currentLocation.text;
+    view.text = currentLocation.text();
     view.title = currentLocation.title;
     readyCommands();
     // commands.sort();
@@ -197,7 +189,7 @@ class Game extends Observable {
                command == 'look around' ||
                command == 'where' ||
                command == 'where am') {
-      view.text = currentLocation.text;
+      view.text = currentLocation.text();
     } else if (command == 'go' ||
                command == 'walk' ||
                command == 'run' ||
