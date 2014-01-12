@@ -5,6 +5,7 @@ import 'dart:collection' show SplayTreeMap;
 import 'dart:convert' show JSON;
 import 'dart:async' show Future;
 import 'package:collection/algorithms.dart';
+import 'package:observe/observe.dart';
 
 part 'actions.dart';
 part 'animates.dart';
@@ -16,14 +17,16 @@ part 'view.dart';
 // TODO save/load to/from a json file
 // TODO multi-word inanimates: add entries to each inanimate/exit map that point
 // to the same inanimate/exit
-// TODO modify descriptions, possibly using stringbuilder to create them 
+// TODO modify descriptions, possibly using stringbuilder to create them
 // from substrings located in the inanimates OR provide complete alternate
 // descriptions that are selected when certain actions occur
 // TODO add descriptions of inanimates to inanimates
 // TODO create complete location description by combining the base location
 // description with the 'current' description for each inanimate
+// TODO Consider replacing visitor pattern with observer pattern between view
+// and game
 
-class Game {
+class Game extends Observable {
 
   /**
    * To add a location: create new class, add text/title to descriptions.json,
@@ -69,18 +72,26 @@ class Game {
 //        // on success
 //        view.inputField.disabled = false; // enable
 //        view.enterButton.disabled = false;  // enable
-//        location = location0; 
+//        location = location0;
 //      })
 //      .catchError((error) {
 //        print('Error initializing location text: $error');
 //        view.title = 'Error';
 //        view.text = 'Sorry, but for some reason the text didn\'t load.';
 //      });
-    currentLocation = location0; // TODO get starting location from json save file.
+
+    // TODO get starting location from json save file.
+    currentLocation = location0;
     view.text = currentLocation.text;
     view.title = currentLocation.title;
     readyCommands();
     // commands.sort();
+
+    // Observe the view
+    view.changes.listen((records) {
+      // print('Changes to $view were: $records');
+      handleInput(view.currentInput);
+    });
   }
 
 //  void set location(Location location) {
@@ -99,11 +110,11 @@ class Game {
     var firstWord;
     var secondWord;
     var combo;
-    
-    input = input.replaceAll(' a ', ' ');
-    input = input.replaceAll(' an ', ' ');
-    input = input.replaceAll(' the ', ' ');
-    
+
+    input = input.replaceAll(' a ', ' ')
+                 .replaceAll(' an ', ' ')
+                 .replaceAll(' the ', ' ');
+
     words = input.split(' ');
     firstWord = words[0];
 
@@ -117,9 +128,9 @@ class Game {
 
 //    if (isCommand(combo)) {
 //      evaluateCommand(combo);
-//    } else 
+//    } else
     if (isCommand(firstWord)) {
-      if (currentLocation.isInanimate(secondWord) || 
+      if (currentLocation.isInanimate(secondWord) ||
           currentLocation.isExit(secondWord) ||
           currentLocation.isExit(firstWord)) {
         view.text = currentLocation.evaluateCommand(player, words);
@@ -135,11 +146,7 @@ class Game {
   }
 
   bool isCommand(String command) {
-    if (binarySearch(commands, command) != -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return (binarySearch(commands, command) != -1);
   }
 
   void evaluateCommand(String command) {
@@ -175,7 +182,7 @@ class Game {
 //               command == 'exit west' ||
 //               command == 'enter west') {
 //      location = currentLocation.west;
-//    } else 
+//    } else
       if (command == 'i' ||
                command == 'inventory') {
       var inv = player.inv;

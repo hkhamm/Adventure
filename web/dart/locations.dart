@@ -17,7 +17,7 @@ class Location {
   bool isInanimate(String inanimate) {
     return inanimates.containsKey(inanimate);
   }
-  
+
   bool isExit(String exit) {
     return exits.containsKey(exit);
   }
@@ -25,13 +25,13 @@ class Location {
   void setupExits() {
     // pass
   }
-  
+
   String evaluateCommand(Player player, List<String> words) {
     var firstWord = words[0];
     var secondWord;
     if (words.length > 1) {
-      secondWord = words[1];  
-    }    
+      secondWord = words[1];
+    }
 
     if (firstWord == 'examine' ||
         firstWord == 'read') {
@@ -60,7 +60,7 @@ class Location {
         game.currentLocation = exits[secondWord].location;
         return exits[secondWord].location.text;
       }
-    } else if (exits.containsKey(firstWord)) { 
+    } else if (exits.containsKey(firstWord)) {
       game.currentLocation = exits[firstWord].location;
       return exits[firstWord].location.text;
     } else {
@@ -79,24 +79,23 @@ class Location0 extends Location {
 
   Location0(Game game) : super(game) {
     title = 'The entrance';
-    text = '''You are standing at the base of a large rocky hill. 
+    text = '''You are standing at the base of a steep rocky slope. 
            To the west is the entrance to a cave. ''';
 
     // inanimates
     sign = new Inanimate(
         'WARNING! This is a dangeous cave. Enter at your own risk!',
-        'There is a small sign embedded in the rock near the cave entrance. ');
+        'There is a small sign embedded in the rock. ');
     inanimates.putIfAbsent('sign', () => sign);
 
     cave = new Inanimate('A dark, mysterious cave entrance.');
     inanimates.putIfAbsent('cave', () => cave);
-    
-    rock = new Takeable('A sharp rock.', 
-                        '''A particularly sharp rock lies on the ground 
-                        near the entrance. ''');
+
+    rock = new Takeable('A sharp rock.',
+                        '''A particularly sharp rock lies on the ground. ''');
     inanimates.putIfAbsent('rock', () => rock);
     inanimates.putIfAbsent('sharp rock', () => rock);
-    
+
     text += rock.locationText + sign.locationText;
   }
 
@@ -111,7 +110,7 @@ class Location0 extends Location {
 
 
 class Location1 extends Location {
-  
+
   Exit east;
 
   Location1(Game game) : super(game) {

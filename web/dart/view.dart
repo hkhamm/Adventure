@@ -1,7 +1,7 @@
 part of game;
 
 
-class View {
+class View extends ChangeNotifier {
 
   Game game;
   ButtonElement enterButton;
@@ -10,6 +10,12 @@ class View {
   ParagraphElement description;
   TitleElement pageTitle;
   HeadingElement roomName;
+
+  String _currentInput;
+  @reflectable get currentInput => _currentInput;
+  @reflectable set currentInput(value) {
+    _currentInput = notifyPropertyChange(#currentInput, _currentInput, value);
+  }
 
   View(this.game) {
     enterButton = querySelector('#button');
@@ -36,9 +42,9 @@ class View {
   }
 
   void handleInput() {
-    var input = inputField.value.toLowerCase().trim();
+    currentInput = inputField.value.toLowerCase().trim();
     inputField.value = '';
-    game.handleInput(input);
+    // game.handleInput(input);
   }
 
 //  void setText(String text, String title) {
