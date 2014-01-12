@@ -14,7 +14,8 @@ part 'inanimates.dart';
 part 'locations.dart';
 part 'view.dart';
 
-// TODO move all command evaluation from locations to game
+// TODO handle using exists that don't exist
+// TODO add all exits to all locations: 9 cardinal directions, up, down
 // TODO save/load to/from a json file, save/load player and locations
 // TODO multi-word inanimates: add entries to each inanimate/exit map that point
 // to the same inanimate/exit, example: 'sharp rock' instead of just 'rock'
@@ -101,7 +102,6 @@ class Game extends Observable {
     var words;
     var firstWord;
     var secondWord;
-    var combo;
 
     input = input.replaceAll(' a ', ' ')
                  .replaceAll(' an ', ' ')
@@ -116,22 +116,26 @@ class Game extends Observable {
       secondWord = '';
     }
 
-//    combo = firstWord + ' ' + secondWord;
+//    if (isCommand(firstWord)) {
+//      if (currentLocation.isInanimate(secondWord) ||
+//          currentLocation.isExit(secondWord) ||
+//          currentLocation.isExit(firstWord)) {
+//        view.text = evaluateCommand(words);
+//        view.title = currentLocation.title;
+//      } else if (secondWord != '') {
+//        view.text = 'I don\'t understand \"$firstWord\" in that context.';
+//      } else {
+//        evaluateCommand1(firstWord);
+//      }
+//    } else {
+//      view.text = 'I don\'t understand \"$firstWord\".';
+//    }
 
-//    if (isCommand(combo)) {
-//      evaluateCommand(combo);
-//    } else
     if (isCommand(firstWord)) {
-      if (currentLocation.isInanimate(secondWord) ||
-          currentLocation.isExit(secondWord) ||
-          currentLocation.isExit(firstWord)) {
-        view.text = currentLocation.evaluateCommand(player, words);
-        view.title = currentLocation.title;
-      } else if (secondWord != '') {
-        view.text = 'I don\'t understand \"$firstWord\" in that context.';
-      } else {
-        evaluateCommand(firstWord);
-      }
+      view.text = evaluateCommand(words);
+      view.title = currentLocation.title;
+    } else if (secondWord != '') {
+      view.text = 'I don\'t understand \"$firstWord\" in that context.';
     } else {
       view.text = 'I don\'t understand \"$firstWord\".';
     }
@@ -141,70 +145,110 @@ class Game extends Observable {
     return (binarySearch(commands, command) != -1);
   }
 
-  void evaluateCommand(String command) {
-//    if (command == 'n' ||
-//        command == 'north' ||
-//        command == 'go north' ||
-//        command == 'walk north' ||
-//        command == 'run north' ||
-//        command == 'exit north' ||
-//        command == 'enter north') {
-//      location = currentLocation.north;
-//    } else if (command == 's' ||
-//               command == 'south' ||
-//               command == 'go south' ||
-//               command == 'walk south' ||
-//               command == 'run south' ||
-//               command == 'exit south' ||
-//               command == 'enter south') {
-//      location = currentLocation.south;
-//    } else if (command == 'e' ||
-//               command == 'east' ||
-//               command == 'go east' ||
-//               command == 'walk east' ||
-//               command == 'run east' ||
-//               command == 'exit east' ||
-//               command == 'enter east') {
-//      location = currentLocation.east;
-//    } else if (command == 'w' ||
-//               command == 'west' ||
-//               command == 'go west' ||
-//               command == 'walk west' ||
-//               command == 'run west' ||
-//               command == 'exit west' ||
-//               command == 'enter west') {
-//      location = currentLocation.west;
-//    } else
-      if (command == 'i' ||
-               command == 'inventory') {
+  String evaluateCommand(List<String> words) {
+    var firstWord = words[0];
+    var secondWord;
+
+    if (words.length > 1) {
+      secondWord = words[1];
+    } else {
+      secondWord = '';
+    }
+
+    if (firstWord == 'examine' ||
+        firstWord == 'read') {
+      player.currentAction = player.examine;
+      return player.act(currentLocation, words);
+    } else if (firstWord == 'take' ||
+        firstWord == 'get') {
+      player.currentAction = player.take;
+      return player.act(currentLocation, words);
+    } else if (firstWord == 'hit' ||
+        firstWord == 'attack') {
+
+      // TODO add combat:
+      // "Attack/hit [animate/inanimate] with [item in player inventory]
+      // capture the third and forth words
+      // if attack/hit && secondWord is animate/inanimate && thirdWord is with
+      // && fourth word is item in inventory
+
+      return 'You $firstWord the $secondWord without any effect.';
+    } else if (firstWord == 'enter' ||
+        firstWord == 'exit' ||
+        firstWord == 'go' ||
+        firstWord == 'walk' ||
+        firstWord == 'run') {
+      if (currentLocation.exits.containsKey(secondWord)) {
+        currentLocation = currentLocation.exits[secondWord].location;
+        return currentLocation.text();
+      } else {
+        return 'You can\'t go $secondWord that way.';
+      }
+    } else if (currentLocation.exits.containsKey(firstWord)) {
+      currentLocation = currentLocation.exits[firstWord].location;
+      return currentLocation.text();
+    } else if (firstWord == 'i' ||
+      firstWord == 'inventory') {
       var inv = player.inv;
-      view.text = '$inv';
-    } else if (command == 'hp' ||
-               command == 'health') {
+      return'$inv';
+    } else if (firstWord == 'hp' ||
+               firstWord == 'health') {
       var hp = player.hp;
-      view.text = 'Health: $hp';
-    } else if (command == 'l' ||
-               command == 'look' ||
-               command == 'location' ||
-               command == 'look around' ||
-               command == 'where' ||
-               command == 'where am') {
-      view.text = currentLocation.text();
-    } else if (command == 'go' ||
-               command == 'walk' ||
-               command == 'run' ||
-               command == 'exit' ||
-               command == 'enter') {
-      view.text = 'Where do you want to $command?';
-    } else if (command == 'examine' ||
-               command == 'take' ||
-               command == 'get' ||
-               command == 'read' ||
-               command == 'attack' ||
-               command == 'hit') {
-      view.text = 'What do you want to $command?';
+      return 'Health: $hp';
+    } else if (firstWord == 'l' ||
+               firstWord == 'look' ||
+               firstWord == 'location' ||
+               firstWord == 'look around' ||
+               firstWord == 'where' ||
+               firstWord == 'where am') {
+      return currentLocation.text();
+    } else if (firstWord == 'go' ||
+               firstWord == 'walk' ||
+               firstWord == 'run' ||
+               firstWord == 'exit' ||
+               firstWord == 'enter') {
+      return 'Where do you want to $firstWord?';
+    } else if (firstWord == 'examine' ||
+               firstWord == 'take' ||
+               firstWord == 'get' ||
+               firstWord == 'read' ||
+               firstWord == 'attack' ||
+               firstWord == 'hit') {
+      return 'What do you want to $firstWord?';
     }
   }
+
+//  void evaluateCommand1(String command) {
+//    if (command == 'i' ||
+//               command == 'inventory') {
+//        var inv = player.inv;
+//        view.text = '$inv';
+//    } else if (command == 'hp' ||
+//               command == 'health') {
+//        var hp = player.hp;
+//        view.text = 'Health: $hp';
+//    } else if (command == 'l' ||
+//               command == 'look' ||
+//               command == 'location' ||
+//               command == 'look around' ||
+//               command == 'where' ||
+//               command == 'where am') {
+//        view.text = currentLocation.text();
+//    } else if (command == 'go' ||
+//               command == 'walk' ||
+//               command == 'run' ||
+//               command == 'exit' ||
+//               command == 'enter') {
+//        view.text = 'Where do you want to $command?';
+//    } else if (command == 'examine' ||
+//               command == 'take' ||
+//               command == 'get' ||
+//               command == 'read' ||
+//               command == 'attack' ||
+//               command == 'hit') {
+//        view.text = 'What do you want to $command?';
+//    }
+//  }
 
   Future readyText() {
     return HttpRequest.getString('json/descriptions.json')
