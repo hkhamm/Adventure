@@ -50,7 +50,6 @@ class Location0 extends Location {
   Inanimate cave;
   Exit west;
   Takeable rock;
-  Inanimate _currentInanimate;
 
   Location0(Game game) : super(game) {
     title = 'The entrance';
@@ -73,19 +72,16 @@ class Location0 extends Location {
     //inanimates.putIfAbsent('sharp rock', () => rock);
   }
 
-//  void currentInanimate(String inanimate) {
-//    switch (inanimate) {
-//      case 'sign':
-//        _currentInanimate = sign;
-//        break;
-//      case 'cave':
-//        _currentInanimate = cave;
-//        break;
-//      case 'rock':
-//        _currentInanimate = rock;
-//        break;
-//    }
-//  }
+  Inanimate inanimate(String inanimate) {
+    switch (inanimate) {
+      case 'sign':
+        return sign;
+      case 'cave':
+        return cave;
+      case 'rock':
+        return rock;
+    }
+  }
 
   void setupExits() {
     west = new Exit(game.location1);
