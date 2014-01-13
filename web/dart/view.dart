@@ -55,6 +55,8 @@ class View extends ChangeNotifier {
 //    }
 //  }
 
+  String get title => pageTitle.text;
+
   void set title(String title) {
     var string = '$title of a dungeon';
     if (title != null && string != roomName) {

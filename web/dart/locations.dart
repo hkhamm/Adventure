@@ -41,48 +41,6 @@ class Location {
     }
     return temp;
   }
-
-  String evaluateCommand(Player player, List<String> words) {
-    var firstWord = words[0];
-    var secondWord;
-    if (words.length > 1) {
-      secondWord = words[1];
-    }
-
-    if (firstWord == 'examine' ||
-        firstWord == 'read') {
-      player.currentAction = player.examine;
-      return player.act(this, words);
-    } else if (firstWord == 'take' ||
-               firstWord == 'get') {
-      player.currentAction = player.take;
-      return player.act(this, words);
-    } else if (firstWord == 'hit' ||
-               firstWord == 'attack') {
-
-      // TODO add combat:
-      // "Attack/hit [animate/inanimate] with [item in player inventory]
-      // capture the third and forth words
-      // if attack/hit && secondWord is animate/inanimate && thirdWord is with
-      // && fourth word is item in inventory
-
-      return 'You $firstWord the $secondWord without any effect.';
-    } else if (firstWord == 'enter' ||
-                firstWord == 'exit' ||
-                firstWord == 'go' ||
-                firstWord == 'walk' ||
-                firstWord == 'run') {
-      if (exits.containsKey(secondWord)) {
-        game.currentLocation = exits[secondWord].location;
-        return exits[secondWord].location.text();
-      }
-    } else if (exits.containsKey(firstWord)) {
-      game.currentLocation = exits[firstWord].location;
-      return exits[firstWord].location.text();
-    } else {
-      return 'I don\'t understand "$firstWord" in that context.';
-    }
-  }
 }
 
 
@@ -92,6 +50,7 @@ class Location0 extends Location {
   Inanimate cave;
   Exit west;
   Takeable rock;
+  Inanimate _currentInanimate;
 
   Location0(Game game) : super(game) {
     title = 'The entrance';
@@ -112,9 +71,21 @@ class Location0 extends Location {
                         'A particularly sharp rock lies on the ground. ');
     inanimates.putIfAbsent('rock', () => rock);
     //inanimates.putIfAbsent('sharp rock', () => rock);
-
-    //text += rock.locationText + sign.locationText;
   }
+
+//  void currentInanimate(String inanimate) {
+//    switch (inanimate) {
+//      case 'sign':
+//        _currentInanimate = sign;
+//        break;
+//      case 'cave':
+//        _currentInanimate = cave;
+//        break;
+//      case 'rock':
+//        _currentInanimate = rock;
+//        break;
+//    }
+//  }
 
   void setupExits() {
     west = new Exit(game.location1);

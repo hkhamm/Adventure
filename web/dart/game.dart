@@ -40,7 +40,6 @@ class Game {
 
   Game() {
     view = new View();
-    player = new Player();
 
     location0 = new Location0(this);
     location1 = new Location1(this);
@@ -68,9 +67,11 @@ class Game {
 //        view.text = 'Sorry, but for some reason the text didn\'t load.';
 //      });
 
-    currentLocation = location0;
-    view.text = currentLocation.text();
-    view.title = currentLocation.title;
+    player = new Player(location0);
+
+    view.text = player.location.text();
+    view.title = player.location.title;
+
     readyCommands();
 
     // Observe the view
@@ -101,7 +102,9 @@ class Game {
 
     if (isCommand(firstWord)) {
       view.text = evaluateCommand(words);
-      view.title = currentLocation.title;
+      if (view.title != player.location.title) {
+        view.title = player.location.title;
+      }
     } else {
       view.text = 'I don\'t understand \"$firstWord\".';
     }
@@ -111,17 +114,12 @@ class Game {
     return commands.contains(command);
   }
 
-  bool isDirection(String direction) {
-    var directions = ['down', 'e', 'east', 'n', 'ne', 'north', 'northeast',
-                      'northwest', 'nw', 's', 'se', 'sw', 'south', 'southeast',
-                      'southwest', 'up', 'w', 'west'];
-    return directions.contains(direction);
-  }
-
   String evaluateCommand(List<String> words) {
-
-    var firstWord = words[0];
+    var firstWord;
     var secondWord;
+    var directions;
+
+    firstWord = words[0];
 
     if (words.length > 1) {
       secondWord = words[1];
@@ -129,58 +127,55 @@ class Game {
       secondWord = '';
     }
 
+    directions = ['down', 'e', 'east', 'n', 'ne', 'north', 'northeast',
+                  'northwest', 'nw', 's', 'se', 'sw', 'south', 'southeast',
+                  'southwest', 'up', 'w', 'west'];
+
     if (secondWord != '') {
       if (firstWord == 'examine' ||
           firstWord == 'read') {
         player.currentAction = player.examine;
-        return player.act(currentLocation, words);
+        return player.act(words);
       } else if (firstWord == 'take' ||
           firstWord == 'get') {
         player.currentAction = player.take;
-        return player.act(currentLocation, words);
+        return player.act(words);
       } else if (firstWord == 'hit' ||
           firstWord == 'attack') {
-        if (words.length > 2) {
-          if (words[2] != 'with') {
-            return 'What do you want to $firstWord with?';
-          } else if (words[2] == 'with' && words.length > 3 &&
-              player.inventory.containsKey(words[3])) {
-            var obj = words[3];
-            // if (currentLocation.isAnimate(obj)) {do attack}
-            return '''You $firstWord the $secondWord with the $obj 
-                without any noticeable effect.''';
-          } else {
-            return 'You need to $firstWord with an object in your inventory.';
-          }
-        } else {
-          return '''You need to $firstWord an object with something 
-                 in your inventory.''';
-        }
+        player.currentAction = player.attack;
+        return player.act(words);
       } else if (firstWord == 'enter' ||
                  firstWord == 'exit' ||
                  firstWord == 'go' ||
                  firstWord == 'walk' ||
                  firstWord == 'run' ||
                  firstWord == 'climb') {
-        if (currentLocation.exits.containsKey(secondWord)) {
-          currentLocation = currentLocation.exits[secondWord].location;
-          return currentLocation.text();
-        } else {
-          if (firstWord == 'enter' ||
-              firstWord == 'exit') {
-            return 'You can\'t $firstWord $secondWord here.';
-          } else {
-            return 'You can\'t $firstWord to $secondWord here.';
-          }
-        }
-      } else if (currentLocation.exits.containsKey(firstWord)) {
-        currentLocation = currentLocation.exits[firstWord].location;
-        return currentLocation.text();
-      } else if (isDirection(firstWord)) {
-        // If it is a direction, but not at that location.
-        return 'You can\'t go that way here.';
+        player.currentAction = player.move;
+        return player.act(words);
       }
+//        if (currentLocation.exits.containsKey(secondWord)) {
+//          currentLocation = currentLocation.exits[secondWord].location;
+//          return currentLocation.text();
+//        } else {
+//          if (firstWord == 'enter' ||
+//              firstWord == 'exit') {
+//            return 'You can\'t $firstWord $secondWord here.';
+//          } else {
+//            return 'You can\'t $firstWord to $secondWord here.';
+//          }
+//        }
+//      } else if (currentLocation.exits.containsKey(firstWord)) {
+//        currentLocation = currentLocation.exits[firstWord].location;
+//        return currentLocation.text();
+//      } else if (isDirection(firstWord)) {
+//        // If it is a direction, but not at that location.
+//        return 'You can\'t go that way here.';
+//      }
     } else {
+      if (directions.contains(firstWord)) {
+        player.currentAction = player.move;
+        return player.act(words);
+      }
       if (firstWord == 'i' ||
           firstWord == 'inventory') {
         var inv = player.inv;
@@ -193,7 +188,7 @@ class Game {
           firstWord == 'look' ||
           firstWord == 'location' ||
           firstWord == 'where') {
-        return currentLocation.text();
+        return player.location.text();
       } else if (firstWord == 'go' ||
           firstWord == 'walk' ||
           firstWord == 'run' ||

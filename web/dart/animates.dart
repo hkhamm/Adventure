@@ -11,22 +11,27 @@ class Animate {
   Action examine;
   Action take;
   Action attack;
+  Action move;
+  Location location;
+
+  Animate(this.location);
 }
 
 
 class Player extends Animate {
 
-  Player() {
+  Player(Location location) : super(location) {
     hp = 10;
     defense = 10;
     inventory = new SplayTreeMap<String, Inanimate>();
     examine = new Examine();
     take = new Take();
     attack = new Attack();
+    move = new Move();
   }
 
-  String act(Location location, List<String> words) {
-    return currentAction.execute(this, location.inanimates, words);
+  String act(List<String> words) {
+    return currentAction.execute(this, words);
   }
 
   String get inv {
