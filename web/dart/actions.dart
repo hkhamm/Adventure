@@ -57,7 +57,7 @@ class Take extends Action {
       if (inanimates[secondWord] is Takeable) {
         var obj = inanimates.remove(secondWord);
         obj.taken = true;
-        player.inventory.add(obj);
+        player.inventory.putIfAbsent(secondWord, () => obj);
         return 'You $firstWord the $secondWord.';
       } else {
         return 'You are unable to $firstWord the $secondWord.';
