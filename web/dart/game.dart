@@ -13,6 +13,7 @@ part 'inanimates.dart';
 part 'locations.dart';
 part 'view.dart';
 
+// TODO handle combat and object damage
 // TODO save/load to/from a json file, save/load player and locations
 // TODO multi-word location objects, allow adjectives
 // example: 'sharp rock' instead of just 'rock'
@@ -149,28 +150,11 @@ class Game {
                  firstWord == 'go' ||
                  firstWord == 'walk' ||
                  firstWord == 'run' ||
-                 firstWord == 'climb') {
+                 firstWord == 'climb' ||
+                 firstWord == 'leave') {
         player.currentAction = player.move;
         return player.act(words);
       }
-//        if (currentLocation.exits.containsKey(secondWord)) {
-//          currentLocation = currentLocation.exits[secondWord].location;
-//          return currentLocation.text();
-//        } else {
-//          if (firstWord == 'enter' ||
-//              firstWord == 'exit') {
-//            return 'You can\'t $firstWord $secondWord here.';
-//          } else {
-//            return 'You can\'t $firstWord to $secondWord here.';
-//          }
-//        }
-//      } else if (currentLocation.exits.containsKey(firstWord)) {
-//        currentLocation = currentLocation.exits[firstWord].location;
-//        return currentLocation.text();
-//      } else if (isDirection(firstWord)) {
-//        // If it is a direction, but not at that location.
-//        return 'You can\'t go that way here.';
-//      }
     } else {
       if (directions.contains(firstWord)) {
         player.currentAction = player.move;

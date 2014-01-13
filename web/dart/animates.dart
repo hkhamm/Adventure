@@ -5,7 +5,6 @@ class Animate {
 
   int hp;
   int defense;
-  // List<Inanimate> inventory;
   SplayTreeMap<String, Inanimate> inventory;
   Action currentAction;
   Action examine;

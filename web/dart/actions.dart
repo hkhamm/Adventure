@@ -3,16 +3,14 @@ part of game;
 
 class Action {
 
-  String execute(Player player,
-                 List<String> words) {
+  String execute(Player player, List<String> words) {
     // pass
   }
 }
 
 class Attack extends Action {
 
-  String execute(Player player,
-                 List<String> words) {
+  String execute(Player player, List<String> words) {
     var firstWord;
     var secondWord;
     var thirdWord;
@@ -38,7 +36,7 @@ class Attack extends Action {
         return 'What do you want to $firstWord with?';
       } else if (thirdWord == 'with' && words.length > 3 &&
           player.inventory.containsKey(fourthWord)) {
-        // if (currentLocation.isAnimate(fourthWord)) {do attack}
+        // TODO if (currentLocation.isAnimate(fourthWord)) {do attack}
         return '''You $firstWord the $secondWord with the $fourthWord 
             without any noticeable effect.''';
       } else {
@@ -56,7 +54,6 @@ class Move extends Action {
   String execute(Player player, List<String> words) {
     var firstWord;
     var secondWord;
-    var location;
     var directions;
 
     firstWord = words[0];
@@ -67,17 +64,14 @@ class Move extends Action {
       secondWord = '';
     }
 
-    location = player.location;
-
-
     directions = ['down', 'e', 'east', 'n', 'ne', 'north', 'northeast',
                   'northwest', 'nw', 's', 'se', 'sw', 'south', 'southeast',
                   'southwest', 'up', 'w', 'west'];
 
     if (secondWord != '') {
-      if (location.exits.containsKey(secondWord) && firstWord != 'climb') {
-        player.location = location.exits[secondWord].location;
-        return location.text();
+      if (player.location.exits.containsKey(secondWord) && firstWord != 'climb') {
+        player.location = player.location.exits[secondWord].location;
+        return player.location.text();
       } else {
         if (firstWord == 'enter' ||
             firstWord == 'exit') {
@@ -94,9 +88,9 @@ class Move extends Action {
           return 'You can\'t $firstWord $secondWord here.';
         }
       }
-    } else if (location.exits.containsKey(firstWord)) {
-      location = location.exits[firstWord].location;
-      return location.text();
+    } else if (player.location.exits.containsKey(firstWord)) {
+      player.location = player.location.exits[firstWord].location;
+      return player.location.text();
     } else if (directions.contains(firstWord)) {
       // If it is a direction, but not at that location.
       return 'You can\'t go $firstWord here.';
