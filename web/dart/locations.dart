@@ -8,7 +8,6 @@ class Location {
   SplayTreeMap<String, Exit> exits;
   String title;
   String _description;
-  String _text;
 
   Location(this.game) {
     inanimates = new SplayTreeMap<String, Inanimate>();
@@ -28,19 +27,19 @@ class Location {
   }
 
   String text() {
-    _text = _description;
+    var text = _description;
     var list = [];
     for (var inanimate in inanimates.values) {
       if (!list.contains(inanimate)) {
         list.add(inanimate);
         if (inanimate is !Takeable) {
-          _text += inanimate.locationText;
+          text += inanimate.locationText;
         } else if (inanimate is Takeable && !inanimate.taken) {
-          _text += inanimate.locationText;
+          text += inanimate.locationText;
         }
       }
     }
-    return _text;
+    return text;
   }
 }
 
