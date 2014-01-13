@@ -14,7 +14,7 @@ part 'locations.dart';
 part 'view.dart';
 
 // TODO save/load to/from a json file, save/load player and locations
-// TODO multi-word location object map,
+// TODO multi-word location objects, allow adjectives
 // example: 'sharp rock' instead of just 'rock'
 
 class Game {
