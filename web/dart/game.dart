@@ -159,8 +159,7 @@ class Game {
       if (directions.contains(firstWord)) {
         player.currentAction = player.move;
         return player.act(words);
-      }
-      if (firstWord == 'i' ||
+      } else if (firstWord == 'i' ||
           firstWord == 'inventory') {
         var inv = player.inv;
         return'$inv';
