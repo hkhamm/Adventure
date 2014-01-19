@@ -10,7 +10,7 @@ class View extends ChangeNotifier {
   TitleElement pageTitle;
   HeadingElement roomName;
 
-  String _currentInput;
+  List<String> _currentInput;
   @reflectable get currentInput => _currentInput;
   @reflectable set currentInput(value) {
     _currentInput = notifyPropertyChange(#currentInput, _currentInput, value);
@@ -41,19 +41,16 @@ class View extends ChangeNotifier {
   }
 
   void handleInput() {
-    currentInput = inputField.value.toLowerCase().trim();
-    inputField.value = '';
-    // game.handleInput(input);
-  }
+    currentInput = inputField.value.toLowerCase()
+                                   .trim()
+                                   .replaceAll(' a ', ' ')
+                                   .replaceAll(' an ', ' ')
+                                   .replaceAll(' to ', ' ')
+                                   .replaceAll(' the ', ' ')
+                                   .split(' ');
 
-//  void setText(String text, String title) {
-//    appendText(text);
-//    var string = "$title of a dungeon";
-//    if (title != null && string != roomName) {
-//      pageTitle.text = string;
-//      roomName.text = string;
-//    }
-//  }
+    inputField.value = '';
+  }
 
   String get title => pageTitle.text;
 

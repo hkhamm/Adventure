@@ -12,7 +12,7 @@ packages:
   barback:
     description: barback
     source: hosted
-    version: "0.9.0"
+    version: "0.11.0+1"
   browser:
     description: browser
     source: hosted
@@ -21,6 +21,10 @@ packages:
     description: collection
     source: hosted
     version: "0.9.0"
+  json_object:
+    description: json_object
+    source: hosted
+    version: "1.0.18+2"
   logging:
     description: logging
     source: hosted
@@ -32,7 +36,7 @@ packages:
   path:
     description: path
     source: hosted
-    version: "0.9.0"
+    version: "1.0.0"
   source_maps:
     description: source_maps
     source: hosted
@@ -40,7 +44,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "0.9.0"
+    version: "0.9.1"
   unmodifiable_collection:
     description: unmodifiable_collection
     source: hosted

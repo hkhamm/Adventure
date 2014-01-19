@@ -3,4 +3,5 @@ description: A text-based adventure game for the web.
 dependencies:
   browser: any
   collection: any
+  json_object: any
   observe: any
