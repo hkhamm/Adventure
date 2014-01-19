@@ -2,19 +2,23 @@ part of game;
 
 
 /**
- * A class to manage a list of gameData in memory
- * and in an IndexedDB.
+ * A class to manage a list of gameData in memory and in an IndexedDB.
  */
-class AdventureStore {
+class IndexedDBStorage {
   static const String ADVENTURE_STORE = 'adventureStore';
-  static const String NAME_INDEX = 'name_index';
 
   Database _db;
-  Map gameData;
+  Map _gameData;
 
-  AdventureStore() {
-    gameData = new Map();
+  IndexedDBStorage() {
+    _gameData = new Map();
   }
+
+  void set gameData(Map data) {
+    _gameData = data;
+  }
+
+  Map get gameData => _gameData;
 
   Future open() {
     return window.indexedDB.open('adventureDB',
@@ -31,10 +35,6 @@ class AdventureStore {
     var objectStore = db.createObjectStore(ADVENTURE_STORE,
         autoIncrement: true);
 
-    // Create an index to search by name,
-    // unique is true: the index doesn't allow duplicate adventure names.
-    objectStore.createIndex(NAME_INDEX, 'adventureName', unique: true);
-
     loadData();
   }
 
@@ -42,9 +42,6 @@ class AdventureStore {
   // The future completes when loading is finished.
   Future _loadFromDB(Database db) {
     _db = db;
-
-    var trans = db.transaction(ADVENTURE_STORE, 'readonly');
-    var store = trans.objectStore(ADVENTURE_STORE);
 
     return loadData().then((_) {
       return gameData.length;
@@ -77,7 +74,6 @@ class AdventureStore {
 
     objectStore.add(saveGame, 'save').then((addedKey) {
       // NOTE! The key cannot be used until the transaction completes.
-
       gameData.putIfAbsent(addedKey, () => saveGame);
     });
 

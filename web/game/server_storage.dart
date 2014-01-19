@@ -2,6 +2,7 @@ part of game;
 
 class ServerStorage {
 
+  // Load data from a server.
   void loadData() {
     HttpRequest.getString('http://127.0.0.1:8080/save_data')
         .then((String jsonString) {
@@ -26,6 +27,7 @@ class ServerStorage {
     });
   }
 
+  // Save data to a server.
   void saveData() {
     HttpRequest request = new HttpRequest(); // create a new XHR
 
