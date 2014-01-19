@@ -47,6 +47,8 @@ class View extends ChangeNotifier {
                                    .replaceAll(' an ', ' ')
                                    .replaceAll(' to ', ' ')
                                    .replaceAll(' the ', ' ')
+                                   .replaceAll(' into ', ' ')
+                                   .replaceAll(' in ', ' ')
                                    .split(' ');
 
     inputField.value = '';

@@ -6,6 +6,7 @@ part of game;
  */
 class IndexedDBStorage {
   static const String ADVENTURE_STORE = 'adventureStore';
+  static const String NAME_INDEX = 'name_index';
 
   Database _db;
   Map _gameData;
@@ -35,22 +36,22 @@ class IndexedDBStorage {
     var objectStore = db.createObjectStore(ADVENTURE_STORE,
         autoIncrement: true);
 
+    objectStore.createIndex(NAME_INDEX, 'currentLocation', unique: true);
+
     loadData();
   }
 
   // Loads all of the existing objects from the database.
   // The future completes when loading is finished.
-  Future _loadFromDB(Database db) {
+  void _loadFromDB(Database db) {
     _db = db;
 
-    return loadData().then((_) {
-      return gameData.length;
-    });
+   loadData();
   }
 
-  // Load game data into the the gameData map.
+  // Loads game data into the gameData map.
   // The future completes when loading is finished.
-  Future loadData() {
+  void loadData() {
     var transaction = _db.transaction(ADVENTURE_STORE, 'readonly');
     var objectStore = transaction.objectStore(ADVENTURE_STORE);
     // Get everything in the store.
@@ -60,13 +61,10 @@ class IndexedDBStorage {
       gameData.clear();
       gameData.putIfAbsent(cursor.key, () => cursor.value);
     });
-
-    return cursors.length;
   }
 
-  // Add new game data to the Database.
-  Future saveData(Map saveGame) {
-    print(saveGame);
+  // Adds new game data to the Database.
+  void saveData(Map saveGame) {
     var transaction = _db.transaction(ADVENTURE_STORE, 'readwrite');
     var objectStore = transaction.objectStore(ADVENTURE_STORE);
 
@@ -75,12 +73,6 @@ class IndexedDBStorage {
     objectStore.add(saveGame, 'save').then((addedKey) {
       // NOTE! The key cannot be used until the transaction completes.
       gameData.putIfAbsent(addedKey, () => saveGame);
-    });
-
-    // Note that the game data cannot be queried until the transaction
-    // has completed!
-    return transaction.completed.then((_) {
-      return gameData;
     });
   }
 }

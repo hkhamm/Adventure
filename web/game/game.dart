@@ -15,7 +15,8 @@ part 'inanimates.dart';
 part 'locations.dart';
 part 'view.dart';
 
-// TODO handle combat and object damage
+// TODO enable drop command and adding takeables to locations
+// TODO handle combat and object damage; monsters drop stuff when they die
 // TODO multi-word location objects, allow adjectives
 // example: 'sharp rock' instead of just 'rock'
 
@@ -152,24 +153,24 @@ class Game {
         player.currentAction = player.move;
         return player.act(words);
       } else if (firstWord == 'i' ||
-          firstWord == 'inventory') {
+                 firstWord == 'inventory') {
         var inv = player.inv;
         return'$inv';
       } else if (firstWord == 'hp' ||
-          firstWord == 'health') {
+                 firstWord == 'health') {
         var hp = player.hp;
         return 'Health: $hp';
       } else if (firstWord == 'l' ||
-          firstWord == 'look' ||
-          firstWord == 'location' ||
-          firstWord == 'where') {
+                 firstWord == 'look' ||
+                 firstWord == 'location' ||
+                 firstWord == 'where') {
         return player.location.text();
       } else if (firstWord == 'go' ||
-          firstWord == 'walk' ||
-          firstWord == 'run' ||
-          firstWord == 'exit' ||
-          firstWord == 'enter' ||
-          firstWord == 'climb') {
+                 firstWord == 'walk' ||
+                 firstWord == 'run' ||
+                 firstWord == 'exit' ||
+                 firstWord == 'enter' ||
+                 firstWord == 'climb') {
         return 'Where do you want to $firstWord?';
       } else if (firstWord == 'examine' ||
                  firstWord == 'take' ||
@@ -200,6 +201,8 @@ class Game {
   String load() {
     Map data = store.gameData['save'];
 
+    print(data);
+
     // Set player inventory.
     player.inventory.clear();
     for (var item in data['inventory']) {
@@ -211,8 +214,8 @@ class Game {
     player.location = locations[data['currentLocation']];
 
     // Set locations' takeables' state (bool).
-    for (var location in data['locations']) {
-      locations[location[0]].inanimates[location[1]].taken = location[2];
+    for (var element in data['locations']) {
+      locations[element[0]].inanimates[element[1]].taken = element[2];
     }
 
     updateView();
