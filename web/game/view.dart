@@ -11,8 +11,8 @@ class View extends ChangeNotifier {
   HeadingElement roomName;
 
   List<String> _currentInput;
-  @reflectable get currentInput => _currentInput;
-  @reflectable set currentInput(value) {
+  @observable get currentInput => _currentInput;
+  @observable set currentInput(value) {
     _currentInput = notifyPropertyChange(#currentInput, _currentInput, value);
   }
 
@@ -70,5 +70,9 @@ class View extends ChangeNotifier {
     p.id = 'description';
     descriptionBox.children.add(p);
     descriptionBox.scrollTop = descriptionBox.scrollHeight;
+  }
+
+  void addObserver() {
+
   }
 }
