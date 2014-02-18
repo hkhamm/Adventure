@@ -100,7 +100,7 @@ class Location1 extends Location {
   Location1(Game game) : super(game) {
     title = 'A long dark tunnel';
     _description = '''You are looking down a long dark tunnel. 
-           Behind you, light streams in from the cave entrance to the east.''';
+           Behind you, light streams in from the cave entrance to the east. ''';
   }
 
   void setupExits() {

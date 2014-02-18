@@ -124,7 +124,7 @@ class Take extends Action {
     if (inanimates.containsKey(secondWord)) {
       if (inanimates[secondWord] is Takeable) {
         var item = inanimates[secondWord];
-        item.taken = true;
+        inanimates.remove(secondWord);
         player.inventory.putIfAbsent(secondWord, () => item);
         return 'You $firstWord the $secondWord.';
       } else {
@@ -132,6 +132,26 @@ class Take extends Action {
       }
     } else {
       return 'There is no $secondWord to $firstWord.';
+    }
+  }
+
+}
+
+class Drop extends Action {
+
+  String execute(Player player, List<String> words) {
+    var firstWord = words[0];
+    var secondWord = words[1];
+    var inanimates = player.location.inanimates;
+    var inventory = player.inventory;
+
+    if (inventory.containsKey(secondWord)) {
+      var item = inventory[secondWord];
+      inventory.remove(secondWord);
+      inanimates.putIfAbsent(secondWord, () => item);
+      return 'You $firstWord the $secondWord.';
+    } else {
+      return 'You don\'t have a $secondWord to $firstWord.';
     }
   }
 

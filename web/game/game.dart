@@ -15,7 +15,6 @@ part 'inanimates.dart';
 part 'locations.dart';
 part 'view.dart';
 
-// TODO enable drop command and adding takeables to locations
 // TODO handle combat and object damage; monsters drop stuff when they die
 // TODO multi-word location objects, allow adjectives
 // example: 'sharp rock' instead of just 'rock'
@@ -32,7 +31,6 @@ class Game {
 
   IndexedDBStorage store;
 
-  Location currentLocation;
   Location location0;
   Location location1;
   Location location2;
@@ -109,6 +107,14 @@ class Game {
   }
 
   String evaluateCommand(List<String> words) {
+    
+    /**
+     * To add a new command: 
+     * - add command to commands.json
+     * - process command below
+     * - if it is a new action, create action and add to player
+     */
+    
     var firstWord;
     var secondWord;
     var directions;
@@ -133,6 +139,9 @@ class Game {
       } else if (firstWord == 'take' ||
           firstWord == 'get') {
         player.currentAction = player.take;
+        return player.act(words);
+      } else if (firstWord == 'drop') {
+        player.currentAction = player.drop;
         return player.act(words);
       } else if (firstWord == 'hit' ||
           firstWord == 'attack') {
@@ -176,6 +185,7 @@ class Game {
                  firstWord == 'take' ||
                  firstWord == 'get' ||
                  firstWord == 'read' ||
+                 firstWord == 'drop' ||
                  firstWord == 'attack' ||
                  firstWord == 'hit') {
         return 'What do you want to $firstWord?';
@@ -201,8 +211,6 @@ class Game {
   String load() {
     Map data = store.gameData['save'];
 
-    print(data);
-
     // Set player inventory.
     player.inventory.clear();
     for (var item in data['inventory']) {
@@ -212,10 +220,22 @@ class Game {
 
     // Set player location.
     player.location = locations[data['currentLocation']];
-
-    // Set locations' takeables' state (bool).
-    for (var element in data['locations']) {
-      locations[element[0]].inanimates[element[1]].taken = element[2];
+    
+    // TODO fix this, can't remove an item from the tree while iterating over
+    // that same tree
+    // Remove all takeables and to get ready for the next step.
+    for (var location in locations.keys) {
+      for (var inanimate in locations[location].inanimates.keys) {
+        if (locations[location].inanimates[inanimate] is Takeable) {
+          locations[location].inanimates.remove(inanimate);
+        }
+      }
+    }
+    
+    // Add correct takeables to locations.
+    for (var item in data['locations']) {
+      locations[item[0]].inanimates.putIfAbsent(
+          item[1], () => new Takeable(item[2], item[3]));
     }
 
     updateView();
@@ -245,7 +265,8 @@ class Game {
         if (locations[location].inanimates[inanimate] is Takeable) {
           data["locations"].add(
               [location, inanimate,
-               locations[location].inanimates[inanimate].taken]);
+               locations[location].inanimates[inanimate].examineText,
+               locations[location].inanimates[inanimate].locationText]);
         }
       }
     }

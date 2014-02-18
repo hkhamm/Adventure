@@ -1,6 +1,7 @@
 { "commands": [ "attack",
                 "climb",
                 "down",
+                "drop",
                 "e",
                 "east",
                 "enter",

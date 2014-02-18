@@ -11,6 +11,7 @@ class Animate {
   Action take;
   Action attack;
   Action move;
+  Action drop;
   Location location;
 
   Animate(this.location);
@@ -27,6 +28,7 @@ class Player extends Animate {
     take = new Take();
     attack = new Attack();
     move = new Move();
+    drop = new Drop();
   }
 
   String act(List<String> words) {

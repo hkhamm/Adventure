@@ -71,8 +71,4 @@ class View extends ChangeNotifier {
     descriptionBox.children.add(p);
     descriptionBox.scrollTop = descriptionBox.scrollHeight;
   }
-
-  void addObserver() {
-
-  }
 }
