@@ -6,7 +6,7 @@ class MazeGenerator {
   
   MazeGenerator(Game game, int width, int height) {
     createGrid(game, width, height);
-    createMaze(width, height);
+    createMaze(randomStart(width, height));
   }
   
   void createGrid(Game game, int width, int height) {
@@ -26,11 +26,11 @@ class MazeGenerator {
     }
   }
   
-  void createMaze(int width, int height) {
-      
+  void createMaze(List start) {
+        
   }
   
-  List<int> randStartLoc(int width, int height) {
+  List<int> randomStart(int width, int height) {
     var random = new Random();
     var row = random.nextInt(width);
     var col = random.nextInt(height);
