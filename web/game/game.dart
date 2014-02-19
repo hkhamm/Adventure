@@ -5,6 +5,7 @@ import 'dart:collection' show SplayTreeMap;
 import 'dart:convert' show JSON;
 import 'dart:async' show Future;
 import 'dart:indexed_db';
+import 'dart:math' show Random;
 import 'package:observe/observe.dart';
 
 part 'actions.dart';
@@ -13,6 +14,7 @@ part 'exits.dart';
 part 'indexeddb_storage.dart';
 part 'inanimates.dart';
 part 'locations.dart';
+part 'maze_generator.dart';
 part 'view.dart';
 
 // TODO handle combat and object damage; monsters drop stuff when they die
@@ -25,7 +27,7 @@ class Game {
    * To add a location: create new class,
    * then declare and initialize in Game.
    */
-
+  
   View view;
   Player player;
 
@@ -164,7 +166,7 @@ class Game {
       } else if (firstWord == 'i' ||
                  firstWord == 'inventory') {
         var inv = player.inv;
-        return'$inv';
+        return '$inv';
       } else if (firstWord == 'hp' ||
                  firstWord == 'health') {
         var hp = player.hp;
@@ -207,7 +209,7 @@ class Game {
     });
   }
 
-  // Load data to the IndexedDB.
+  // Load data from the IndexedDB.
   String load() {
     Map data = store.gameData['save'];
 
@@ -220,22 +222,19 @@ class Game {
 
     // Set player location.
     player.location = locations[data['currentLocation']];
-    
-    // TODO fix this, can't remove an item from the tree while iterating over
-    // that same tree
-    // Remove all takeables and to get ready for the next step.
+
+    // Set inanimates at every location.
     for (var location in locations.keys) {
-      for (var inanimate in locations[location].inanimates.keys) {
-        if (locations[location].inanimates[inanimate] is Takeable) {
-          locations[location].inanimates.remove(inanimate);
-        }
-      }
+      locations[location].inanimates.clear();
     }
-    
-    // Add correct takeables to locations.
     for (var item in data['locations']) {
-      locations[item[0]].inanimates.putIfAbsent(
-          item[1], () => new Takeable(item[2], item[3]));
+      if (item[4] == 'takeable') {
+        locations[item[0]].inanimates.putIfAbsent(
+            item[1], () => new Takeable(item[2], item[3]));        
+      } else {
+        locations[item[0]].inanimates.putIfAbsent(
+            item[1], () => new Inanimate(item[2], item[3]));
+      }
     }
 
     updateView();
@@ -248,25 +247,32 @@ class Game {
     var data = new Map();
 
     // Save the player's inventory.
-    data["inventory"] = new List();
+    data['inventory'] = new List();
     var inventory = player.inventory.keys;
     for (var item in inventory) {
-      data["inventory"].add([item, player.inventory[item].examineText,
+      data['inventory'].add([item, player.inventory[item].examineText,
                                  player.inventory[item].locationText]);
     }
 
     // Save the players location.
-    data["currentLocation"] = player.location.title;
+    data['currentLocation'] = player.location.title;
 
-    // Save the state of takeables from every location.
-    data["locations"] = new List();
+    // Save inanimates from every location.
+    data['locations'] = new List();
     for (var location in locations.keys) {
       for (var inanimate in locations[location].inanimates.keys) {
         if (locations[location].inanimates[inanimate] is Takeable) {
-          data["locations"].add(
+          data['locations'].add(
               [location, inanimate,
                locations[location].inanimates[inanimate].examineText,
-               locations[location].inanimates[inanimate].locationText]);
+               locations[location].inanimates[inanimate].locationText,
+               'takeable']);
+        } else {
+          data['locations'].add(
+              [location, inanimate,
+               locations[location].inanimates[inanimate].examineText,
+               locations[location].inanimates[inanimate].locationText,
+               'inanimate']);
         }
       }
     }

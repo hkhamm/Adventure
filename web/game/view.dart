@@ -41,6 +41,7 @@ class View extends ChangeNotifier {
   }
 
   void handleInput() {
+    text = inputField.value;
     currentInput = inputField.value.toLowerCase()
                                    .trim()
                                    .replaceAll(' a ', ' ')

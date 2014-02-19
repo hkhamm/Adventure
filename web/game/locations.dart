@@ -8,6 +8,9 @@ class Location {
   SplayTreeMap<String, Exit> exits;
   String title;
   String _description;
+  int row;
+  int col;
+  bool inMaze = false;
 
   Location(this.game) {
     inanimates = new SplayTreeMap<String, Inanimate>();
