@@ -2,7 +2,7 @@ part of game;
 
 /**
  * Generates a maze of locations with a provided [width] and [height]. 
- * Uses Prim's algorithm.
+ * Uses a random version of Prim's algorithm.
  */
 class MazeGenerator {
   
@@ -49,7 +49,7 @@ class MazeGenerator {
   }
   
   /**
-   * Creates the maze from a grid of unconnected locations using a modified
+   * Creates the maze from a grid of unconnected locations using a random
    * version of Prim's algorithm for finding a minimum spanning tree in a 
    * graph.
    */

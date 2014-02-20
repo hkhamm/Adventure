@@ -17,8 +17,13 @@ part 'maze_generator.dart';
 part 'view.dart';
 
 // TODO handle combat and object damage; monsters drop stuff when they die
-// TODO multi-word location objects, allow adjectives
+// TODO multi-word inanimates, allow adjectives
 // example: 'sharp rock' instead of just 'rock'
+// TODO figure out a way to test that the maze is working correctly
+// TODO create a help command that displays some help for the player, 
+// include possible commands list
+// TODO add animates (monsters) and inanimates (items) to the maze
+// TODO allow player to save/load the maze
 
 class Game {
 
