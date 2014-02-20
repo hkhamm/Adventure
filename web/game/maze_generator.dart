@@ -67,12 +67,14 @@ class MazeGenerator {
       if (!adjacent.inMaze) {
         current.exits.putIfAbsent(wall[2], () => adjacent); // by word
         var direction = wall[2];
-        current._description += 'There is an exit leading $direction';
+        current._description += 'There is an exit leading $direction. ';
         current.exits.putIfAbsent(wall[2][0], () => adjacent); // by letter
+        
         adjacent.exits.putIfAbsent(wall[3], () => current);  // by word
         direction = wall[3];
-        current._description += 'There is an exit leading $direction';
+        current._description += 'There is an exit leading $direction. ';
         adjacent.exits.putIfAbsent(wall[3][0], () => current); // by letter
+        
         addToWallList(adjacent.row, adjacent.col);        
       } else {
         wallList.remove(wallList.elementAt(index));
@@ -81,17 +83,25 @@ class MazeGenerator {
   }
   
   /**
-   * Adds all walls for the current location to wallList. [row] and [col] are 
-   * the coordinates of the current location.
+   * Adds all valid walls for the current location to wallList. 
+   * [row] and [col] are the coordinates of the current location.
    */
   void addToWallList(int row, int col) {   
     maze[row][col].inMaze = true;
     
-    // TODO handle maze boundries
-    wallList.add([[row, col], [row, col - 1], 'north', 'south']);
-    wallList.add([[row, col], [row, col + 1], 'south', 'north']);
-    wallList.add([[row, col], [row - 1, col], 'west', 'east']);
-    wallList.add([[row, col], [row + 1, col], 'east', 'west']);
+    if (col - 1 >= 0) {
+      wallList.add([[row, col], [row, col - 1], 'north', 'south']);  
+    }
+    if (col + 1 <= width) {
+
+      wallList.add([[row, col], [row, col + 1], 'south', 'north']);  
+    }
+    if (row - 1 >= 0) {
+      wallList.add([[row, col], [row - 1, col], 'west', 'east']);  
+    }
+    if (row + 1 <= height) {
+      wallList.add([[row, col], [row + 1, col], 'east', 'west']);      
+    }
   }
   
   /**

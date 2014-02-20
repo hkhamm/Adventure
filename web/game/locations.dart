@@ -34,8 +34,8 @@ class Location {
     var text = _description;
     var list = [];
     
-    // TODO reduce the complexity here. [taken] bool is no longer needed. Add all
-    // locationText from every inanimate.
+    // TODO reduce the complexity here. [taken] bool is no longer needed. 
+    // Add all locationText from every inanimate.
     for (var inanimate in inanimates.values) {
       if (!list.contains(inanimate)) {
         list.add(inanimate);
@@ -46,8 +46,6 @@ class Location {
         }
       }
     }
-    
-    // Add exitText
     
     return text;
   }
