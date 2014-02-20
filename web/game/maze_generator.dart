@@ -58,24 +58,30 @@ class MazeGenerator {
     addToWallList(start[0], start[1]);
 
     // Modified Prim's
-    while (wallList.length > 0) {
+    while (wallList.isNotEmpty) {
       var index = random.nextInt(wallList.length);
       var wall = wallList[index]; // Random wall
       var current = maze[wall[0][0]][wall[0][1]];
-      var adjacent = maze[wall[1][0]][wall[1][1]];
-      
-      if (!adjacent.inMaze) {
-        current.exits.putIfAbsent(wall[2], () => adjacent); // by word
-        var direction = wall[2];
-        current._description += 'There is an exit leading $direction. ';
-        current.exits.putIfAbsent(wall[2][0], () => adjacent); // by letter
+      if (wall[1][0] >= 0 && wall[1][0] < width &&
+          wall[1][1] >= 0 && wall[1][1] < height) {
+
+        var adjacent = maze[wall[1][0]][wall[1][1]];
         
-        adjacent.exits.putIfAbsent(wall[3], () => current);  // by word
-        direction = wall[3];
-        current._description += 'There is an exit leading $direction. ';
-        adjacent.exits.putIfAbsent(wall[3][0], () => current); // by letter
-        
-        addToWallList(adjacent.row, adjacent.col);        
+        if (!adjacent.inMaze) {
+          var direction = wall[2];
+          current.exits.putIfAbsent(direction, () => adjacent); // by word
+          current._description += 'There is an exit leading $direction. ';
+          current.exits.putIfAbsent(direction[0], () => adjacent); // by letter
+
+          direction = wall[3];
+          adjacent.exits.putIfAbsent(direction, () => current);
+          adjacent._description += 'There is an exit leading $direction. ';
+          adjacent.exits.putIfAbsent(direction[3][0], () => current);
+          
+          addToWallList(adjacent.row, adjacent.col);        
+        } else {
+          wallList.remove(wallList.elementAt(index));
+        }
       } else {
         wallList.remove(wallList.elementAt(index));
       }

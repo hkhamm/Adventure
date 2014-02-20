@@ -70,7 +70,7 @@ class Move extends Action {
 
     if (secondWord != '') {
       if (player.location.exits.containsKey(secondWord) && firstWord != 'climb') {
-        player.location = player.location.exits[secondWord].location;
+        player.location = player.location.exits[secondWord];
         return player.location.text();
       } else {
         if (firstWord == 'enter' ||
@@ -89,7 +89,7 @@ class Move extends Action {
         }
       }
     } else if (player.location.exits.containsKey(firstWord)) {
-      player.location = player.location.exits[firstWord].location;
+      player.location = player.location.exits[firstWord];
       return player.location.text();
     } else if (directions.contains(firstWord)) {
       // If it is a direction, but not at that location.

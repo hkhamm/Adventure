@@ -5,7 +5,7 @@ class Location {
 
   Game game;
   SplayTreeMap<String, Inanimate> inanimates;
-  SplayTreeMap<String, Exit> exits;
+  SplayTreeMap<String, Location> exits;
   String title;
   String _description;
   int row;
@@ -14,7 +14,7 @@ class Location {
 
   Location(this.game) {
     inanimates = new SplayTreeMap<String, Inanimate>();
-    exits = new SplayTreeMap<String, Exit>();
+    exits = new SplayTreeMap<String, Location>();
   }
 
   bool isInanimate(String inanimate) {

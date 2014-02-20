@@ -69,6 +69,7 @@ class Game {
     var start = mazeGenerator.start;
     
     // Create map of locations in the maze.
+    locations = {};
     for (int i = 0; i < maze.length; i++) {
       for (int j = 0; j < maze[0].length; j++) {
         locations.putIfAbsent(maze[i][j].title, () => maze[i][j]);
