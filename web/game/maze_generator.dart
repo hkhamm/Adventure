@@ -14,7 +14,8 @@ class MazeGenerator {
   List<int> start;
   
   /**
-   * Constructor. [game] is the game. [width] and [height] are the maze dimensions.
+   * Constructor. [game] is the game. [width] and [height] are the 
+   * maze dimensions.
    */
   MazeGenerator(Game game, int width, int height) {
     this.game = game;
@@ -76,7 +77,7 @@ class MazeGenerator {
           direction = wall[3];
           adjacent.exits.putIfAbsent(direction, () => current);
           adjacent._description += 'There is an exit leading $direction. ';
-          adjacent.exits.putIfAbsent(direction[3][0], () => current);
+          adjacent.exits.putIfAbsent(direction[0], () => current);
           
           addToWallList(adjacent.row, adjacent.col);        
         } else {
@@ -98,14 +99,14 @@ class MazeGenerator {
     if (col - 1 >= 0) {
       wallList.add([[row, col], [row, col - 1], 'north', 'south']);  
     }
-    if (col + 1 <= width) {
+    if (col + 1 < width) {
 
       wallList.add([[row, col], [row, col + 1], 'south', 'north']);  
     }
     if (row - 1 >= 0) {
       wallList.add([[row, col], [row - 1, col], 'west', 'east']);  
     }
-    if (row + 1 <= height) {
+    if (row + 1 < height) {
       wallList.add([[row, col], [row + 1, col], 'east', 'west']);      
     }
   }

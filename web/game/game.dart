@@ -10,7 +10,6 @@ import 'package:observe/observe.dart';
 
 part 'actions.dart';
 part 'animates.dart';
-part 'exits.dart';
 part 'indexeddb_storage.dart';
 part 'inanimates.dart';
 part 'locations.dart';
