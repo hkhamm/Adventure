@@ -33,12 +33,13 @@ class Game {
 
   IndexedDBStorage store;
 
-  Location location0;
-  Location location1;
-  Location location2;
-  Location location3;
-  Location location4;
+//  Location location0;
+//  Location location1;
+//  Location location2;
+//  Location location3;
+//  Location location4;
   Map<String, Location> locations;
+  List<List<Location>> maze;
 
   List<String> commands;
 
@@ -48,22 +49,33 @@ class Game {
     store = new IndexedDBStorage();
     store.open();
 
-    location0 = new Location0(this);
-    location1 = new Location1(this);
-    location2 = new Location2(this);
-    location3 = new Location3(this);
-    location4 = new Location4(this);
-
-    locations = {location0.title: location0,
-                 location1.title: location1,
-                 location2.title: location2,
-                 location3.title: location3,
-                 location4.title: location4};
-    for (var location in locations.values) {
-      location.setupExits();
+//    location0 = new Location0(this);
+//    location1 = new Location1(this);
+//    location2 = new Location2(this);
+//    location3 = new Location3(this);
+//    location4 = new Location4(this);
+//
+//    locations = {location0.title: location0,
+//                 location1.title: location1,
+//                 location2.title: location2,
+//                 location3.title: location3,
+//                 location4.title: location4};
+//    for (var location in locations.values) {
+//      location.setupExits();
+//    }
+    
+    var mazeGenerator = new MazeGenerator(this, 20, 30);
+    maze = mazeGenerator.maze;
+    var start = mazeGenerator.start;
+    
+    // Create map of locations in the maze.
+    for (int i = 0; i < maze.length; i++) {
+      for (int j = 0; j < maze[0].length; j++) {
+        locations.putIfAbsent(maze[i][j].title, () => maze[i][j]);
+      }
     }
 
-    player = new Player(location0);
+    player = new Player(maze[start[0]][start[1]]);
 
     updateView();
 
@@ -108,15 +120,13 @@ class Game {
     return commands.contains(command);
   }
 
-  String evaluateCommand(List<String> words) {
-    
-    /**
-     * To add a new command: 
-     * - add command to commands.json
-     * - process command below
-     * - if it is a new action, create action and add to player
-     */
-    
+  /**
+   * To add a new command: 
+   * - add command to commands.json
+   * - process command below
+   * - if it is a new action, create action and add to player
+   */
+  String evaluateCommand(List<String> words) {   
     var firstWord;
     var secondWord;
     var directions;

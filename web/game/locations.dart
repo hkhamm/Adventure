@@ -28,10 +28,14 @@ class Location {
   void setupExits() {
     // pass
   }
+  
 
   String text() {
     var text = _description;
     var list = [];
+    
+    // TODO reduce the complexity here. [taken] bool is no longer needed. Add all
+    // locationText from every inanimate.
     for (var inanimate in inanimates.values) {
       if (!list.contains(inanimate)) {
         list.add(inanimate);
@@ -42,6 +46,9 @@ class Location {
         }
       }
     }
+    
+    // Add exitText
+    
     return text;
   }
 }
@@ -86,13 +93,13 @@ class Location0 extends Location {
     }
   }
 
-  void setupExits() {
-    west = new Exit(game.location1);
-    exits.putIfAbsent('cave', () => west);
-    exits.putIfAbsent('dungeon', () => west);
-    exits.putIfAbsent('west', () => west);
-    exits.putIfAbsent('w', () => west);
-  }
+//  void setupExits() {
+//    west = new Exit(game.location1);
+//    exits.putIfAbsent('cave', () => west);
+//    exits.putIfAbsent('dungeon', () => west);
+//    exits.putIfAbsent('west', () => west);
+//    exits.putIfAbsent('w', () => west);
+//  }
 }
 
 
@@ -106,13 +113,13 @@ class Location1 extends Location {
            Behind you, light streams in from the cave entrance to the east. ''';
   }
 
-  void setupExits() {
-    east = new Exit(game.location0);
-    exits.putIfAbsent('cave', () => east);
-    exits.putIfAbsent('entrance', () => east);
-    exits.putIfAbsent('east', () => east);
-    exits.putIfAbsent('e', () => east);
-  }
+//  void setupExits() {
+//    east = new Exit(game.location0);
+//    exits.putIfAbsent('cave', () => east);
+//    exits.putIfAbsent('entrance', () => east);
+//    exits.putIfAbsent('east', () => east);
+//    exits.putIfAbsent('e', () => east);
+//  }
 }
 
 

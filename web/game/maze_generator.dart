@@ -1,8 +1,8 @@
 part of game;
 
 /**
- * Generates a maze of locations with a provided width and height. Uses Prim's
- * algorithm.
+ * Generates a maze of locations with a provided [width] and [height]. 
+ * Uses Prim's algorithm.
  */
 class MazeGenerator {
   
@@ -14,7 +14,7 @@ class MazeGenerator {
   List<int> start;
   
   /**
-   * Constructor. Game is the game. width and height are the maze dimensions.
+   * Constructor. [game] is the game. [width] and [height] are the maze dimensions.
    */
   MazeGenerator(Game game, int width, int height) {
     this.game = game;
@@ -40,7 +40,7 @@ class MazeGenerator {
         location.row = i;
         location.col = j;
         location.title = 'Location ($i, $j)';
-        location._description = 'Location ($i, $j)';
+        location._description = 'Location ($i, $j). ';
         col.add(location);
       }
       maze.add(col);
@@ -48,7 +48,9 @@ class MazeGenerator {
   }
   
   /**
-   * Creates the maze from a grid of unconnected locations.
+   * Creates the maze from a grid of unconnected locations using a modified
+   * version of Prim's algorithm for finding a minimum spanning tree in a 
+   * graph.
    */
   void createMaze() {
     var random = new Random();
@@ -64,8 +66,12 @@ class MazeGenerator {
       
       if (!adjacent.inMaze) {
         current.exits.putIfAbsent(wall[2], () => adjacent); // by word
+        var direction = wall[2];
+        current._description += 'There is an exit leading $direction';
         current.exits.putIfAbsent(wall[2][0], () => adjacent); // by letter
         adjacent.exits.putIfAbsent(wall[3], () => current);  // by word
+        direction = wall[3];
+        current._description += 'There is an exit leading $direction';
         adjacent.exits.putIfAbsent(wall[3][0], () => current); // by letter
         addToWallList(adjacent.row, adjacent.col);        
       } else {
@@ -75,12 +81,13 @@ class MazeGenerator {
   }
   
   /**
-   * Adds all walls for the current location to wallList. row and col are the
-   * coordinates of the current location.
+   * Adds all walls for the current location to wallList. [row] and [col] are 
+   * the coordinates of the current location.
    */
   void addToWallList(int row, int col) {   
     maze[row][col].inMaze = true;
     
+    // TODO handle maze boundries
     wallList.add([[row, col], [row, col - 1], 'north', 'south']);
     wallList.add([[row, col], [row, col + 1], 'south', 'north']);
     wallList.add([[row, col], [row - 1, col], 'west', 'east']);
