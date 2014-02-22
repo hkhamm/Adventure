@@ -24,7 +24,7 @@ part of game;
  */
 class MazeGenerator {
   
-  Game game;
+  // Game game;
   int width;
   int height;
   List<List<Location>> maze;
@@ -32,11 +32,10 @@ class MazeGenerator {
   List<int> start;
   
   /**
-   * Constructor. [game] is the game. [width] and [height] are the 
-   * maze dimensions.
+   * Constructor. [width] and [height] are the maze dimensions.
    */
-  MazeGenerator(Game game, int width, int height) {
-    this.game = game;
+  MazeGenerator(int width, int height) {
+    //this.game = game;
     this.width = width;
     this.height = height;
     maze = [];
@@ -49,17 +48,29 @@ class MazeGenerator {
   }
   
   /**
+   * Generates a random starting location for the maze within the bounds
+   * provided by width and height.
+   */
+  void setStart() {
+    var random = new Random();
+    var row = random.nextInt(width);
+    var col = random.nextInt(height);
+
+    start = [row, col];
+  }
+  
+  /**
    * Creates a grid of unconnected locations that will become a maze.
    */
   void createGrid() {
     for (int i = 0; i < width; i++) {
       var col = [];
       for (int j = 0; j < height; j++) {
-        var location = new Location(game);
+        var location = new Location();
         location.row = i;
         location.col = j;
         location.title = 'Location ($i, $j)';
-        location._description = 'Location ($i, $j). ';
+        location.description = 'Location ($i, $j). ';
         col.add(location);
       }
       maze.add(col);
@@ -89,12 +100,12 @@ class MazeGenerator {
         if (!adjacent.inMaze) {
           var direction = wall[2];
           current.exits.putIfAbsent(direction, () => adjacent); // by word
-          current._description += 'There is an exit leading $direction. ';
+          current.description += 'There is an exit leading $direction. ';
           current.exits.putIfAbsent(direction[0], () => adjacent); // by letter
 
           direction = wall[3];
           adjacent.exits.putIfAbsent(direction, () => current);
-          adjacent._description += 'There is an exit leading $direction. ';
+          adjacent.description += 'There is an exit leading $direction. ';
           adjacent.exits.putIfAbsent(direction[0], () => current);
           
           addToWallList(adjacent.row, adjacent.col);        
@@ -127,17 +138,5 @@ class MazeGenerator {
     if (row + 1 < height) {
       wallList.add([[row, col], [row + 1, col], 'east', 'west']);      
     }
-  }
-  
-  /**
-   * Generates a random starting location for the maze within the bounds
-   * provided by width and height.
-   */
-  void setStart() {
-    var random = new Random();
-    var row = random.nextInt(width);
-    var col = random.nextInt(height);
-
-    start = [row, col];
   }
 }

@@ -48,13 +48,15 @@ class Attack extends Action {
     } else {
       fourthWord = '';
     }
-
+    
+    // Must have this form:
+    // 'attack/hit [monster name] with [item name]'
     if (words.length > 2) {
       if (thirdWord != 'with') {
         return 'What do you want to $firstWord with?';
       } else if (thirdWord == 'with' && words.length > 3 &&
           player.inventory.containsKey(fourthWord)) {
-        // TODO if (currentLocation.isAnimate(fourthWord)) {do attack}
+        // TODO if (currentLocation.isAnimate(secondWord)) {do attack}
         return '''You $firstWord the $secondWord with the $fourthWord 
             without any noticeable effect.''';
       } else {

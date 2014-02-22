@@ -21,16 +21,16 @@ part of game;
 
 class Location {
 
-  Game game;
+  //Game game;
   SplayTreeMap<String, Inanimate> inanimates;
   SplayTreeMap<String, Location> exits;
   String title;
-  String _description;
+  String description;
   int row;
   int col;
   bool inMaze = false;
 
-  Location(this.game) {
+  Location() {
     inanimates = new SplayTreeMap<String, Inanimate>();
     exits = new SplayTreeMap<String, Location>();
   }
@@ -48,20 +48,22 @@ class Location {
   } 
 
   String text() {
-    var text = _description;
-    var list = [];
+    var text = description;
+//    var list = [];
+//    
+//    for (var inanimate in inanimates.values) {
+//      if (!list.contains(inanimate)) {
+//        list.add(inanimate);
+//        if (inanimate is !Takeable) {
+//          text += inanimate.locationText;
+//        } else if (inanimate is Takeable && !inanimate.taken) {
+//          text += inanimate.locationText;
+//        }
+//      }
+//    }
     
-    // TODO reduce the complexity here. [taken] bool is no longer needed. 
-    // Add all locationText from every inanimate.
     for (var inanimate in inanimates.values) {
-      if (!list.contains(inanimate)) {
-        list.add(inanimate);
-        if (inanimate is !Takeable) {
-          text += inanimate.locationText;
-        } else if (inanimate is Takeable && !inanimate.taken) {
-          text += inanimate.locationText;
-        }
-      }
+      text += inanimate.locationText;
     }
     
     return text;

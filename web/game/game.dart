@@ -86,7 +86,7 @@ class Game {
 //      location.setupExits();
 //    }
     
-    var mazeGenerator = new MazeGenerator(this, 20, 30);
+    var mazeGenerator = new MazeGenerator(20, 30);
     maze = mazeGenerator.maze;
     var start = mazeGenerator.start;
     
