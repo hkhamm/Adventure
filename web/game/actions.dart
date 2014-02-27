@@ -89,7 +89,8 @@ class Move extends Action {
                   'southwest', 'up', 'w', 'west'];
 
     if (secondWord != '') {
-      if (player.location.exits.containsKey(secondWord) && firstWord != 'climb') {
+      if (player.location.exits.containsKey(secondWord) && 
+          firstWord != 'climb') {
         player.location = player.location.exits[secondWord];
         return player.location.text();
       } else {
